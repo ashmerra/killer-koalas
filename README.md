@@ -2,7 +2,7 @@
 
 # Killer Koalas
 
-Part the Blue Team. A portrait phone browser game.
+The comeback is cuddly. A portrait phone browser game.
 
 **Play: https://ashmerra.github.io/killer-koalas/**
 
