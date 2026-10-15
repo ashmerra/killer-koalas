@@ -276,6 +276,29 @@ button {
 .gold { color: var(--gold); }
 .leaf { color: var(--leaf); }
 .mute { position: absolute; top: calc(var(--safe-top) + 10px); right: 10px; font-size: 18px; }
+.switch-game {
+  position: absolute;
+  top: calc(var(--safe-top) + 10px);
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 10px 0 8px;
+  border-radius: 12px;
+  font-family: var(--display);
+  font-size: 10.5px;
+  line-height: 1.05;
+  letter-spacing: .5px;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .4);
+  background: linear-gradient(180deg, #2f6bff, var(--blue) 60%, #12348a);
+  border: 2px solid rgba(255, 255, 255, .3);
+  box-shadow: 0 4px 0 #081d52, 0 6px 14px rgba(0, 0, 0, .4);
+}
+.switch-icon { font-size: 16px; }
+.switch-game:active { transform: translateY(3px); box-shadow: 0 1px 0 #081d52; }
 
 .panel-screen {
   display: grid;
