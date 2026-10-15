@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#4a0a0e">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Killer Koalas">
+  <title>Killer Koalas — The Comeback Is Cuddly</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preload" href="assets/hero.webp" as="image">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <canvas id="game" aria-label="Killer Koalas game"></canvas>
+
+    <div id="hud" class="hidden">
+      <div class="hud-top">
+        <div class="hud-left">
+          <div class="army"><span class="koala-icon"></span><span id="horde">0</span></div>
+          <div id="mult" class="mult"></div>
+        </div>
+        <div class="hud-center">
+          <div id="score" class="score">0</div>
+          <div id="waveLabel" class="meters">WAVE 1</div>
+        </div>
+        <div class="hud-right">
+          <button id="pauseBtn" class="icon-btn" aria-label="Pause">❚❚</button>
+        </div>
+      </div>
+      <div class="wave">
+        <div class="wave-label">MOSES</div>
+        <div class="wave-bar"><div id="waveFill" class="wave-fill"></div></div>
+      </div>
+      <button id="stampedeBtn" class="stampede-btn" aria-label="Cuddle Stampede">
+        <span class="stampede-word">CUDDLE<br>STAMPEDE</span>
+        <span id="stampedeCount" class="stampede-count">0</span>
+        <svg class="stampede-ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="46"></circle><circle id="rallyProgress" class="progress" cx="50" cy="50" r="46"></circle></svg>
+      </button>
+    </div>
+
+    <section id="title" class="screen title-screen">
+      <div class="hero" role="img" aria-label="A koala chief in a red headband raising a eucalyptus branch over a koala army"></div>
+      <div class="title-shade"></div>
+      <div class="title-content">
+        <h1 class="logo sr-only"><span>KILLER</span><span>KOALAS</span></h1>
+        <p class="tagline">THE COMEBACK IS CUDDLY</p>
+        <button id="playBtn" class="play-btn">PLAY</button>
+        <p id="bestLine" class="best"></p>
+        <details class="how">
+          <summary>How to play</summary>
+          <ul>
+            <li><b>Pull back</b> like a slingshot: pull down for distance, pull right to aim left (and left to aim right), and let go to fling a koala off the Rock. A <b class="gold">gold ring</b> means it will hit.</li>
+            <li>Land on a <b class="blue">Moses</b> to cuddle him out. Direct hits <b class="gold">chain</b> to the next Moses.</li>
+            <li>A Moses who reaches the horde <b class="blue">parts</b> it, scattering koalas. Stop him first.</li>
+            <li>Land on <b class="leaf">gum leaves</b> to charge the <b class="gold">CUDDLE STAMPEDE</b>. Land on red flags to recruit stragglers.</li>
+            <li>Thrown koalas run back to the horde. Lose every koala and the comeback is over.</li>
+          </ul>
+        </details>
+      </div>
+      <button id="muteBtn" class="icon-btn mute" aria-label="Toggle sound">🔊</button>
+    </section>
+
+    <section id="pause" class="screen panel-screen hidden">
+      <div class="panel">
+        <h2>PAUSED</h2>
+        <button id="resumeBtn" class="play-btn">RESUME</button>
+        <button id="quitBtn" class="ghost-btn">QUIT TO TITLE</button>
+      </div>
+    </section>
+
+    <section id="over" class="screen panel-screen hidden">
+      <div class="over-hero"></div>
+      <div class="panel">
+        <h2 id="overTitle">THE HORDE<br>WAS PARTED</h2>
+        <div class="stats">
+          <div><span>Score</span><b id="oScore">0</b></div>
+          <div><span>Wave</span><b id="oWave">0</b></div>
+          <div><span>Moseses cuddled</span><b id="oCuddled">0</b></div>
+          <div><span>Best chain</span><b id="oChain">0</b></div>
+          <div><span>Peak horde</span><b id="oHorde">0</b></div>
+          <div><span>Best</span><b id="oBest">0</b></div>
+        </div>
+        <p class="quote">Some comebacks are crushing.<br>This one is <b>cuddly</b>.</p>
+        <button id="againBtn" class="play-btn">RALLY AGAIN</button>
+        <button id="homeBtn" class="ghost-btn">TITLE</button>
+      </div>
+    </section>
+
+    <div id="rotate" class="rotate"><div>Turn your phone upright<br>to rally the horde</div></div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
