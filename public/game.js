@@ -12,7 +12,8 @@
   const MAX_PULL = 200;
   const AIM_X = 1.6;
   const LOCK_PAD = 12;
-  const MAX_CHARGES = 3;
+  const MAX_CHARGES = 2;
+  const RALLY_PER_CHARGE = 150;
   const START_KOALAS = 20;
   const SPLASH_R = 44;
   const CHAIN_R = 135;
@@ -782,7 +783,7 @@
     cuddle(m, idx);
   }
 
-  function cuddle(m, idx) {
+  function cuddle(m, idx, earnsRally = true) {
     m.alive = false;
     m.fade = 0.8;
     m.fallDir = Math.random() < 0.5 ? -1 : 1;
@@ -794,33 +795,32 @@
     burst(m.x, m.y - 10, boss ? 30 : 12, HEARTS, boss ? 200 : 110, 'heart');
     const label = boss ? `BIG MOSES CUDDLED +${pts}` : idx > 1 ? `CHAIN x${idx} +${pts}` : `CUDDLED +${pts}`;
     floatText(label, m.x, m.y - 26, idx > 1 || boss ? '#ffcf4a' : '#fff', idx > 1 || boss ? 17 : 15);
-    addRally(boss ? 60 : 7 + idx * 2);
+    if (earnsRally) addRally(boss ? 60 : 7 + idx * 2);
     Sfx.cuddle(idx);
     if (boss) {
       g.shake = 14;
       g.flash = 1;
       g.flashColor = '255,207,74';
       dropPickup('flag', m.x - 20, m.y);
-      dropPickup('leaves', m.x + 20, m.y);
+      if (earnsRally) dropPickup('leaves', m.x + 20, m.y);
       buzz([40, 30, 90]);
-    } else if (Math.random() < 0.08) {
+    } else if (earnsRally && Math.random() < 0.08) {
       dropPickup('leaves', m.x, m.y);
     }
   }
 
   function addRally(v) {
+    // A full bank cannot store a hidden extra stampede in the meter.
+    if (g.charges >= MAX_CHARGES) return;
     g.rally += v;
-    while (g.rally >= 100) {
-      if (g.charges >= MAX_CHARGES) {
-        g.rally = 100;
-        break;
-      }
-      g.rally -= 100;
+    while (g.rally >= RALLY_PER_CHARGE && g.charges < MAX_CHARGES) {
+      g.rally -= RALLY_PER_CHARGE;
       g.charges++;
       floatText('STAMPEDE READY!', OX, OY - 60, '#ffcf4a', 18);
       Sfx.charge();
       buzz(25);
     }
+    if (g.charges >= MAX_CHARGES) g.rally = 0;
   }
 
   // ---------------------------------------------------------------- pickups and runners
@@ -844,7 +844,7 @@
   function collect(it) {
     it.taken = true;
     if (it.type === 'leaves') {
-      addRally(35);
+      addRally(25);
       burst(it.x, it.y, 14, LEAVES, 130, 'leaf');
       floatText('+GUM LEAVES', it.x, it.y - 18, '#8fd18a', 15);
       Sfx.leaves();
@@ -901,10 +901,11 @@
         m.hp -= 4;
         m.stun = 1;
         m.kby -= 160;
-        if (m.hp <= 0) cuddle(m, 1);
+        if (m.hp <= 0) cuddle(m, 1, false);
         else floatText('-4', m.x, m.y - 50, '#ffcf4a', 18);
       } else {
-        cuddle(m, 1);
+        // Stampedes still score, but cannot fund the next stampede via kills or leaves.
+        cuddle(m, 1, false);
       }
     }
     g.bottles = g.bottles.filter((b) => {
@@ -2079,7 +2080,7 @@
       hud.waveFill.style.transform = `scaleX(${lf})`;
     }
     setText('charges', hud.count, String(g.charges));
-    const prog = g.charges >= MAX_CHARGES ? 1 : Math.round(g.rally) / 100;
+    const prog = g.charges >= MAX_CHARGES ? 1 : Math.round(g.rally) / RALLY_PER_CHARGE;
     if (hud.cache.prog !== prog) {
       hud.cache.prog = prog;
       hud.ring.style.strokeDashoffset = String(289 * (1 - prog));
